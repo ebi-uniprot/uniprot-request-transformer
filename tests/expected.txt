@@ -1,0 +1,12 @@
+/uniprotkb/search?query=organism_id:83333#application/json
+/blast/uniprot/B20200930216DA2B77BFBD2E6699CA9B6D1C41EB221828EM.ali?alignment=115#application/json
+/mapping/M20201001E5A08BB0B2D1C45B0C7BC3B55FD26556BC6AAFM#application/json
+/uniprotkb/P0AE13.rss?version=*#application/json
+/uniref/stream?format=rss&limit=25&offset=0&query=*#application/json
+/uniprotkb/search?query=goa:("biological_process+[0008150]")+yourlist:M202010018471C63D39733769F8E060B506551E12BCF0DF0#application/json
+/taxonomy/348017#application/json
+/uniprotkb/P05067.txt#text/plain; format=flatfile
+/uniprotkb/P05067.tsv#text/plain; format=tsv
+/uniref/stream?format=tsv&limit=25&offset=0&query=*#application/json
+/uniref/stream?query=taxonomy_id:55087&format=list&force=true&compress=yes#text/plain; format=list
+/uniprotkb/stream?query=accession:Q92133+OR+mnemonic:Q92133&format=xml#application/xml#application/xml

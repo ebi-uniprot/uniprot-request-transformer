@@ -1,0 +1,12 @@
+/uniprotkb/?query=organism:83333+pathway:399.78&sort=score
+/blast/uniprot/B20200930216DA2B77BFBD2E6699CA9B6D1C41EB221828EM.ali?alignment=115
+/mapping/M20201001E5A08BB0B2D1C45B0C7BC3B55FD26556BC6AAFM
+/uniprotkb/P0AE13.rss?version=*
+/uniref/stream?format=rss&limit=25&offset=0&query=*
+/uniprotkb/?query=goa:("biological_process [0008150]") yourlist:M202010018471C63D39733769F8E060B506551E12BCF0DF0
+/taxonomy/348017
+/uniprotkb/P05067.txt
+/uniprotkb/P05067.tab
+/uniref/stream?format=tab&limit=25&offset=0&query=*
+/uniref/stream?query=taxonomy:"Bacillus [1386]" OR taxonomy:"Bacillus [55087]" identity:1.0 NOT count:[2 TO 10000000000]&format=list&force=true&sort=score&compress=yes
+/uniprotkb/stream?query=ACCESSION:Q92133+OR+MNEMONIC:Q92133&format=xml#application/xml

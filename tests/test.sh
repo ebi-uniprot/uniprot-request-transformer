@@ -1,0 +1,11 @@
+testout=./tests/test.txt
+input=./tests/input.txt
+expected=./tests/expected.txt
+cat ./tests/input.txt | ./transformer.py > $testout
+if cmp --silent -- "$testout" "$expected"; then
+  echo "PASS"
+else
+  echo "FAIl"
+  diff -y $input $testout
+fi
+rm $testout
