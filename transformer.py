@@ -54,7 +54,7 @@ def transform_request(resource):
 
 def main():
     for request in sys.stdin:
-        sys.stdout.write(transform_request(request) + "\n")
+        sys.stdout.write(transform_request(request))
 
 
 if __name__ == "__main__":
