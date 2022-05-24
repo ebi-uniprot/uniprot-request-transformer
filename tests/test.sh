@@ -6,6 +6,6 @@ if cmp --silent -- "$testout" "$expected"; then
   echo "PASS"
 else
   echo "FAIl"
-  diff -y $input $testout
+  diff -u --color $testout $expected
 fi
 rm $testout
