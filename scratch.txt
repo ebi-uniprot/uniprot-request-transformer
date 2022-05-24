@@ -1,1 +1,18 @@
 sqlite3 uniprot-20220101-20220513.sqlite3 "SELECT Resource FROM Request WHERE Status = 200 LIMIT 100;" | ./uniprot-request-transformer/transformer.py | ./uniprot-request-transformer/prepare_for_gatling.py"
+
+prev_to_new = {
+    'author': 'lit_author',
+    'cdantigen': 'protein_name',
+    'goa': 'go',
+    'host': 'virus_host',
+    'id': 'accession_id',
+    'inn': 'protein_name',
+    'method': 'cc_mass_spectrometry',
+    'modified': 'date_modified',
+    'name': 'protein_name',
+    'replaces': 'sec_acc',
+    'sequence_modified': 'date_sequence_modified',
+    'web': 'cc_webresource'
+}
+
+'database': 'database, xref',
