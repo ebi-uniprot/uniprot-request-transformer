@@ -1,2 +1,5 @@
-sqlite3 uniprot-20220101-20220513.sqlite3 "SELECT Resource FROM Request WHERE Status = 200 LIMIT 100;" | ./uniprot-request-transformer/transformer.py | ./uniprot-request-transformer/prepare_for_gatling.py"
+sqlite3 uniprot-20220101-20220513.sqlite3 "SELECT Resource FROM Request WHERE Status = 200 LIMIT 100;" | ./uniprot-request-transformer/transformer.py | ./uniprot-request-transformer/prepare_for_gatling.py
 
+sqlite3 uniprot-20220101-20220513.sqlite3 "SELECT Resource FROM Request WHERE Status = 200 LIMIT 100000;" \
+| ./uniprot-request-transformer/transformer.py \
+> foo.txt

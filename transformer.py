@@ -115,7 +115,7 @@ def transform_request(resource):
 def main():
     for request in sys.stdin:
         if include_request(request):
-            sys.stdout.write(transform_request(request))
+            sys.stdout.write(transform_request(request.strip()))
 
 
 if __name__ == "__main__":

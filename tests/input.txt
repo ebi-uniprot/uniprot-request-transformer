@@ -16,3 +16,5 @@
 /uniprot?query=database:(type:pfam)
 /uniprot/?query=database:(type:pdb%201aut)
 /uniprot/?query=database%3A%28type%3Apdb+count%3A%5B20+TO+*%5D%29
+/uniprot/?sort=score&query=G3DSA:3.40.50.10140&limit=10&columns=id&format=tab
+/uniprot/C3NE65
