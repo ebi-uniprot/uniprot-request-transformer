@@ -4,7 +4,7 @@ from collections import defaultdict
 
 
 def floor_minute(timestamp):
-    return 60 * int(timestamp / 60)
+    return 60 * int(int(timestamp) / 60)
 
 
 def main():
