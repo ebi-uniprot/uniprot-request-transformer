@@ -20,3 +20,4 @@
 /uniprot/C3NE65
 /uniprot/?query=*&sort=id
 /uniprot/?query=*&sort=id&desc=no
+/uniprot/?query=database:(type:pfam)&format=tab&limit=10&columns=id,entry%20name,reviewed,protein%20names,genes,organism,length,comment(ALTERNATIVE%20PRODUCTS),fragment

@@ -5,6 +5,121 @@ import os
 import re
 from urllib.parse import urlencode, urlparse, parse_qs, unquote
 
+prev_to_new_return_field = {
+    "id": "accession",
+    "entry name": "id",
+    "genes": "gene_names",
+    "genes(PREFERRED)": "gene_primary",
+    "genes(ALTERNATIVE)": "gene_synonym",
+    "genes(OLN)": "gene_oln",
+    "genes(ORF)": "gene_orf",
+    "organism": "organism_name",
+    "organism-id": "organism_id",
+    "protein names": "protein_name",
+    "proteome": "xref_proteomes",
+    "lineage(ALL)": "lineage",
+    "virus hosts": "virus_hosts",
+    "comment(ALTERNATIVE PRODUCTS)": "cc_alternative_products",
+    "feature(ALTERNATIVE SEQUENCE)": "ft_var_seq",
+    "comment(ERRONEOUS GENE MODEL PREDICTION)": "error_gmodel_pred",
+    "fragment": "fragment",
+    "encodedon": "organelle",
+    "length": "length",
+    "mass": "mass",
+    "comment(MASS SPECTROMETRY)": "cc_mass_spectrometry",
+    "feature(NATURAL VARIANT)": "ft_variant",
+    "feature(NON ADJACENT RESIDUES)": "ft_non_cons",
+    "feature(NON STANDARD RESIDUE)": "ft_non_std",
+    "feature(NON TERMINAL RESIDUE)": "ft_non_ter",
+    "comment(POLYMORPHISM)": "cc_polymorphism",
+    "comment(RNA EDITING)": "cc_rna_editing",
+    "sequence": "sequence",
+    "comment(SEQUENCE CAUTION)": "cc_sequence_caution",
+    "feature(SEQUENCE CONFLICT)": "ft_conflict",
+    "feature(SEQUENCE UNCERTAINTY)": "ft_unsure",
+    "version(sequence)": "sequence_version",
+    "comment(ABSORPTION)": "absorption",
+    "feature(ACTIVE SITE)": "ft_act_site",
+    "comment(ACTIVITY REGULATION)": "cc_activity_regulation",
+    "feature(BINDING SITE)": "ft_binding",
+    "chebi": "ft_ca_bind",
+    "chebi(Catalytic activity)": "cc_catalytic_activity",
+    "chebi(Cofactor)": "cc_cofactor",
+    "feature(DNA BINDING)": "ft_dna_bind",
+    "ec": "ec",
+    "comment(FUNCTION)": "cc_function",
+    "comment(KINETICS)": "kinetics",
+    "feature(METAL BINDING)": "ft_metal",
+    "feature(NP BIND)": "ft_np_bind",
+    "comment(PATHWAY)": "cc_pathway",
+    "comment(PH DEPENDENCE)": "ph_dependence",
+    "comment(REDOX POTENTIAL)": "redox_potential",
+    "rhea-id": "rhea_id",
+    "feature(SITE)": "ft_site",
+    "comment(TEMPERATURE DEPENDENCE)": "temp_dependence",
+    "annotation score": "annotation_score",
+    "comment(CAUTION)": "cc_caution",
+    "features": "feature",
+    "keyword-id": "keywordid",
+    "keywords": "keyword",
+    "comment(MISCELLANEOUS)": "cc_miscellaneous",
+    "existence": "protein_existence",
+    "reviewed": "reviewed",
+    "tools": "tools",
+    "uniparcid": "uniparc_id",
+    "interactor": "cc_interaction",
+    "comment(SUBUNIT)": "cc_subunit",
+    "comment(DEVELOPMENTAL STAGE)": "cc_developmental_stage",
+    "comment(INDUCTION)": "cc_induction",
+    "comment(TISSUE SPECIFICITY)": "cc_tissue_specificity",
+    "go(biological process)": "go_p",
+    "go(cellular component)": "go_c",
+    "go": "go",
+    "go(molecular function)": "go_f",
+    "go-id": "go_id",
+    "comment(ALLERGEN)": "cc_allergen",
+    "comment(BIOTECHNOLOGY)": "cc_biotechnology",
+    "comment(DISRUPTION PHENOTYPE)": "cc_disruption_phenotype",
+    "comment(DISEASE)": "cc_disease",
+    "feature(MUTAGENESIS)": "ft_mutagen",
+    "comment(PHARMACEUTICAL)": "cc_pharmaceutical",
+    "comment(TOXIC DOSE)": "cc_toxic_dose",
+    "feature(INTRAMEMBRANE)": "ft_intramem",
+    "comment(SUBCELLULAR LOCATION)": "cc_subcellular_location",
+    "feature(TOPOLOGICAL DOMAIN)": "ft_topo_dom",
+    "feature(TRANSMEMBRANE)": "ft_transmem",
+    "feature(CHAIN)": "ft_chain",
+    "feature(CROSS LINK)": "ft_crosslnk",
+    "feature(DISULFIDE BOND)": "ft_disulfid",
+    "feature(GLYCOSYLATION)": "ft_carbohyd",
+    "feature(INITIATOR METHIONINE)": "ft_init_met",
+    "feature(LIPIDATION)": "ft_lipid",
+    "feature(MODIFIED RESIDUE)": "ft_mod_res",
+    "feature(PEPTIDE)": "ft_peptide",
+    "comment(PTM)": "cc_ptm",
+    "feature(PROPEPTIDE)": "ft_propep",
+    "feature(SIGNAL)": "ft_signal",
+    "feature(TRANSIT)": "ft_transit",
+    "3d": "structure_3d",
+    "feature(BETA STRAND)": "ft_strand",
+    "feature(HELIX)": "ft_helix",
+    "feature(TURN)": "ft_turn",
+    "citation": "lit_pubmed_id",
+    "created": "date_created",
+    "last-modified": "date_modified",
+    "sequence-modified": "date_sequence_modified",
+    "version(entry)": "version",
+    "feature(COILED COIL)": "ft_coiled",
+    "feature(COMPOSITIONAL BIAS)": "ft_compbias",
+    "comment(DOMAIN)": "cc_domain",
+    "feature(DOMAIN EXTENT)": "ft_domain",
+    "feature(MOTIF)": "ft_motif",
+    "families": "protein_families",
+    "feature(REGION)": "ft_region",
+    "feature(REPEAT)": "ft_repeat",
+    "feature(ZINC FINGER)": "ft_zn_fing",
+}
+
 
 def include_request(resource):
     re_namespace_exclude = re.compile(
@@ -58,7 +173,7 @@ def transform_query(query):
             return f"xref:{db}-{qid}"
         return f"database:{db}"
 
-    prev_field_to_new_field = {
+    prev_to_new_query_field = {
         "author": "lit_author",
         "cdantigen": "protein_name",
         "goa": "go",
@@ -72,13 +187,23 @@ def transform_query(query):
         "sequence_modified": "date_sequence_modified",
         "web": "cc_webresource",
     }
-    for prev_field, new_field in prev_field_to_new_field.items():
+    for prev_field, new_field in prev_to_new_query_field.items():
         query = query.replace(f"{prev_field}:", f"{new_field}:")
 
     query = query.replace("ACCESSION:", "accession:")
     query = query.replace("MNEMONIC:", "mnemonic:")
 
     return query
+
+
+def transform_columns(columns):
+    return ",".join(
+        [
+            prev_to_new_return_field[c]
+            for c in columns.split(",")
+            if c in prev_to_new_return_field
+        ]
+    )
 
 
 def transform_request(resource):
@@ -88,12 +213,15 @@ def transform_request(resource):
         if "score" in parsed_qs["sort"]:
             parsed_qs.pop("sort")
         else:
-            sort_dir = (
-                "asc"
-                if "desc" in parsed_qs and parsed_qs["desc"][0] == "no"
-                else "desc"
-            )
-            parsed_qs["sort"] = f'{parsed_qs["sort"][0]} {sort_dir}'
+            sort_field = parsed_qs["sort"][0]
+            if sort_field in prev_to_new_return_field:
+                sort_field = prev_to_new_return_field[sort_field]
+                sort_dir = (
+                    "asc"
+                    if "desc" in parsed_qs and parsed_qs["desc"][0] == "no"
+                    else "desc"
+                )
+                parsed_qs["sort"] = f"{sort_field} {sort_dir}"
     if "query" in parsed_qs:
         endpoint = (
             "stream" if "format" in parsed_qs and "limit" not in parsed_qs else "search"
@@ -112,6 +240,9 @@ def transform_request(resource):
     if "limit" in parsed_qs:
         parsed_qs["size"] = parsed_qs["limit"]
         del parsed_qs["limit"]
+    if "columns" in parsed_qs:
+        parsed_qs["fields"] = transform_columns(parsed_qs["columns"][0])
+        del parsed_qs["columns"]
     if parsed_url.path.startswith("/uniprot/"):
         parsed_url = parsed_url._replace(
             path=parsed_url.path.replace("/uniprot/", "/uniprotkb/", 1)
