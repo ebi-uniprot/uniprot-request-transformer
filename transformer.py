@@ -87,10 +87,8 @@ def transform_request(resource):
     if "sort" in parsed_qs and "score" in parsed_qs["sort"]:
         parsed_qs.pop("sort")
     if "query" in parsed_qs:
-        if "format" not in parsed_qs:
-            parsed_url = parsed_url._replace(
-                path=os.path.join(parsed_url.path, "search")
-            )
+        endpoint = "stream" if "format" in parsed_qs else "search"
+        parsed_url = parsed_url._replace(path=os.path.join(parsed_url.path, endpoint))
         parsed_qs["query"] = transform_query(parsed_qs["query"][0])
     if "format" in parsed_qs and parsed_qs["format"][0] == "tab":
         parsed_qs["format"] = "tsv"

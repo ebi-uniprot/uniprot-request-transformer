@@ -8,4 +8,3 @@ else
   echo "FAIl"
   diff -u $expected $testout 
 fi
-rm $testout
