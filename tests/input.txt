@@ -9,7 +9,7 @@
 /uniprot/P05067.tab
 /uniref/?format=tab&limit=25&offset=0&query=*
 /uniref/?query=taxonomy:"Bacillus [1386]" OR taxonomy:"Bacillus [55087]" identity:1.0 NOT count:[2 TO 10000000000]&format=list&force=true&sort=score&compress=yes
-/uniprot/?query=ACCESSION:Q92133+OR+MNEMONIC:Q92133&format=xml#application/xml
+/uniprot/?query=ACCESSION:Q92133+OR+MNEMONIC:Q92133&format=xml
 /uniprot/?query=created%3A%5B20220501+TO+20220525%5D&sort=score
 /uniprot/?query=author%3Arice
 /uniprot/?query=web%3Aprotein&sort=score
