@@ -2,7 +2,7 @@
 /taxonomy/348017
 /uniprotkb/P05067.txt
 /uniprotkb/P05067.tsv
-/uniref/stream?format=tsv&limit=25&offset=0&query=*
+/uniref/search?format=tsv&offset=0&query=*&size=25
 /uniref/stream?query=taxonomy_id:55087&format=list&force=true&compressed=true
 /uniprotkb/stream?query=accession:Q92133+OR+mnemonic:Q92133&format=xml
 /uniprotkb/search?query=date_created:2022-05-01+TO+2022-05-25

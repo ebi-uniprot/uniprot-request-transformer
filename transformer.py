@@ -87,7 +87,9 @@ def transform_request(resource):
     if "sort" in parsed_qs and "score" in parsed_qs["sort"]:
         parsed_qs.pop("sort")
     if "query" in parsed_qs:
-        endpoint = "stream" if "format" in parsed_qs else "search"
+        endpoint = (
+            "stream" if "format" in parsed_qs and "limit" not in parsed_qs else "search"
+        )
         parsed_url = parsed_url._replace(path=os.path.join(parsed_url.path, endpoint))
         parsed_qs["query"] = transform_query(parsed_qs["query"][0])
     if "format" in parsed_qs and parsed_qs["format"][0] == "tab":
@@ -95,8 +97,13 @@ def transform_request(resource):
     if parsed_url.path.endswith(".tab"):
         parsed_url = parsed_url._replace(path=parsed_url.path.replace(".tab", ".tsv"))
     if "compress" in parsed_qs:
-        parsed_qs["compressed"] = "true" if parsed_qs["compress"][0] == "yes" else "false"
+        parsed_qs["compressed"] = (
+            "true" if parsed_qs["compress"][0] == "yes" else "false"
+        )
         del parsed_qs["compress"]
+    if "limit" in parsed_qs:
+        parsed_qs["size"] = parsed_qs["limit"]
+        del parsed_qs["limit"]
     if parsed_url.path.startswith("/uniprot/"):
         parsed_url = parsed_url._replace(
             path=parsed_url.path.replace("/uniprot/", "/uniprotkb/", 1)
