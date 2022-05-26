@@ -241,7 +241,9 @@ def transform_request(resource):
         parsed_qs["size"] = parsed_qs["limit"]
         del parsed_qs["limit"]
     if "columns" in parsed_qs:
-        parsed_qs["fields"] = transform_columns(parsed_qs["columns"][0])
+        transformed_columns = transform_columns(parsed_qs["columns"][0])
+        if len(transformed_columns):
+            parsed_qs["fields"] = transformed_columns
         del parsed_qs["columns"]
     if parsed_url.path.startswith("/uniprot/"):
         parsed_url = parsed_url._replace(
