@@ -84,8 +84,16 @@ def transform_query(query):
 def transform_request(resource):
     parsed_url = urlparse(resource)
     parsed_qs = parse_qs(parsed_url.query)
-    if "sort" in parsed_qs and "score" in parsed_qs["sort"]:
-        parsed_qs.pop("sort")
+    if "sort" in parsed_qs:
+        if "score" in parsed_qs["sort"]:
+            parsed_qs.pop("sort")
+        else:
+            sort_dir = (
+                "asc"
+                if "desc" in parsed_qs and parsed_qs["desc"][0] == "no"
+                else "desc"
+            )
+            parsed_qs["sort"] = f'{parsed_qs["sort"][0]} {sort_dir}'
     if "query" in parsed_qs:
         endpoint = (
             "stream" if "format" in parsed_qs and "limit" not in parsed_qs else "search"

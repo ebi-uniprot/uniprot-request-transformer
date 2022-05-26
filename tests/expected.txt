@@ -13,3 +13,5 @@
 /uniprotkb/search?query=xref_count_pdb:[20+TO+*]
 /uniprotkb/search?query=G3DSA:3.40.50.10140&columns=id&format=tsv&size=10
 /uniprotkb/C3NE65
+/uniprotkb/search?query=*&sort=id+desc
+/uniprotkb/search?query=*&sort=id+asc&desc=no
