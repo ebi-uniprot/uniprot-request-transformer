@@ -29,19 +29,51 @@ def transform_query(query):
         r"(?P<field>organism|taxonomy):((\".*\[(?P<id1>\d+)\]\")|(?P<id2>\d+))",
         re.IGNORECASE,
     )
-    re_created = re.compile(r"created:\[(?P<start>.*) TO (?P<end>.*)]")
-
-    m = re_organism_taxonomy.match(query)
+    m = re_organism_taxonomy.search(query)
     if m:
         field = m.group("field")
         value = m.group("id1") or m.group("id2")
         return f"{field}_id:{value}"
 
-    m = re_created.match(query)
+    re_created = re.compile(r"created:\[(?P<start>.*) TO (?P<end>.*)]", re.IGNORECASE)
+    m = re_created.search(query)
     if m:
         start = transorm_date(m.group("start"))
         end = transorm_date(m.group("end"))
         return f"date_created:{start} TO {end}"
+
+    re_database = re.compile(
+        r"database:\(type:(?P<db>\S*)(( count:\[(?P<start>.*) TO (?P<end>.*)\])| (?P<qid>.*))?\)",
+        re.IGNORECASE,
+    )
+    m = re_database.search(query)
+    if m:
+        db = m.group("db")
+        start = m.group("start")
+        end = m.group("end")
+        qid = m.group("qid")
+        if start and end:
+            return f"xref_count_{db}:[{start} TO {end}]"
+        if qid:
+            return f"xref:{db}-{qid}"
+        return f"database:{db}"
+
+    prev_field_to_new_field = {
+        "author": "lit_author",
+        "cdantigen": "protein_name",
+        "goa": "go",
+        "host": "virus_host",
+        "id": "accession_id",
+        "inn": "protein_name",
+        "method": "cc_mass_spectrometry",
+        "modified": "date_modified",
+        "name": "protein_name",
+        "replaces": "sec_acc",
+        "sequence_modified": "date_sequence_modified",
+        "web": "cc_webresource",
+    }
+    for prev_field, new_field in prev_field_to_new_field.items():
+        query = query.replace(f"{prev_field}:", f"{new_field}:")
 
     query = query.replace("ACCESSION:", "accession:")
     query = query.replace("MNEMONIC:", "mnemonic:")
