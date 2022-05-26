@@ -1,5 +1,16 @@
-sqlite3 uniprot-20220101-20220513.sqlite3 "SELECT Resource FROM Request WHERE Status = 200 LIMIT 100;" | ./uniprot-request-transformer/transformer.py | ./uniprot-request-transformer/prepare_for_gatling.py
-
-sqlite3 uniprot-20220101-20220513.sqlite3 "SELECT Resource FROM Request WHERE Status = 200 LIMIT 100000;" \
+sqlite3 uniprot-20220101-20220513.sqlite3 \
+"SELECT Resource FROM Request WHERE Status = 200 AND MethodId = 1;" \
 | ./uniprot-request-transformer/transformer.py \
-> foo.txt
+| ./uniprot-request-transformer/prepare_for_gatling.py \
+> get-200-transformed-prepared-for-gatling.not-distinct.txt
+
+sqlite3 uniprot-20220101-20220513.sqlite3 \
+"SELECT DISTINCT Resource FROM Request WHERE Status = 200 AND MethodId = 1 LIMIT 100000;" \
+| ./uniprot-request-transformer/transformer.py \
+| ./uniprot-request-transformer/prepare_for_gatling.py \
+> get-200-transformed-prepared-for-gatling.txt
+
+sqlite3 uniprot-20220101-20220513.sqlite3 \
+"SELECT DateTime FROM Request WHERE Status = 200;" \
+| ./uniprot-request-transformer/count_requests.py \
+> 200-requests_per_minute.txt
