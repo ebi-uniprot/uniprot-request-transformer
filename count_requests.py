@@ -13,7 +13,7 @@ def main():
         floored = floor_minute(timestamp)
         requests_per_minute[floored] += 1
     for timestamp in sorted(requests_per_minute.keys()):
-        sys.stdout.write(f"{timestamp},{requests_per_minute[timestamp]}")
+        sys.stdout.write(f"{timestamp},{requests_per_minute[timestamp]}\n")
 
 
 if __name__ == "__main__":
