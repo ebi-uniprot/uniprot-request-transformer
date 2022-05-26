@@ -94,6 +94,9 @@ def transform_request(resource):
         parsed_qs["format"] = "tsv"
     if parsed_url.path.endswith(".tab"):
         parsed_url = parsed_url._replace(path=parsed_url.path.replace(".tab", ".tsv"))
+    if "compress" in parsed_qs:
+        parsed_qs["compressed"] = "true" if parsed_qs["compress"][0] == "yes" else "false"
+        del parsed_qs["compress"]
     if parsed_url.path.startswith("/uniprot/"):
         parsed_url = parsed_url._replace(
             path=parsed_url.path.replace("/uniprot/", "/uniprotkb/", 1)
