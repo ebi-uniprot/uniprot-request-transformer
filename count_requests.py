@@ -4,7 +4,7 @@ from collections import defaultdict
 
 
 def floor_minute(timestamp):
-    return str(60 * int(int(timestamp) / 60))
+    return 60 * int(int(timestamp) / 60)
 
 
 def get_status_key(status):
@@ -19,7 +19,7 @@ def main():
         requests_per_minute[(floored, get_status_key(status))] += 1
     for k in sorted(requests_per_minute.keys()):
         (timestamp, status) = k
-        sys.stdout.write(",".join([timestamp, status, requests_per_minute[k]]))
+        sys.stdout.write(f"{timestamp},{status},{requests_per_minute[k]}")
 
 
 if __name__ == "__main__":
