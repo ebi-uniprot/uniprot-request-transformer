@@ -4,7 +4,7 @@ from collections import defaultdict
 
 
 def floor_minute(timestamp):
-    return 60 * int(int(timestamp) / 60)
+    return str(60 * int(int(timestamp) / 60))
 
 
 def get_status_key(status):

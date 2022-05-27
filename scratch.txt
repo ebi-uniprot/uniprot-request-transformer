@@ -13,4 +13,4 @@ sqlite3 uniprot-20220101-20220513.sqlite3 \
 sqlite3 uniprot-20220101-20220513.sqlite3 \
 "SELECT DateTime, Status FROM Request;" \
 | ./uniprot-request-transformer/count_requests.py \
-> requests_per_minute.txt
+> requests_per_minute_with_status.txt
