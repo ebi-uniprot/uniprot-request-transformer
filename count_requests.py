@@ -18,7 +18,7 @@ def main():
         floored = floor_minute(timestamp)
         requests_per_minute[(floored, get_status_key(status), useragent)] += 1
     for k in sorted(requests_per_minute.keys()):
-        (timestamp, status) = k
+        (timestamp, status, useragent) = k
         sys.stdout.write(f"{timestamp},{status},{requests_per_minute[k]},{useragent}\n")
 
 
