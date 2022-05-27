@@ -8,18 +8,18 @@ def floor_minute(timestamp):
 
 
 def get_status_key(status):
-    return f"{status}xx"
+    return f"{status[0]}xx"
 
 
 def main():
     requests_per_minute = defaultdict(int)
     for line in sys.stdin:
-        timestamp, status = line.split("|")
+        timestamp, status = line.strip().split("|")
         floored = floor_minute(timestamp)
         requests_per_minute[(floored, get_status_key(status))] += 1
     for k in sorted(requests_per_minute.keys()):
         (timestamp, status) = k
-        sys.stdout.write(f"{timestamp},{status},{requests_per_minute[k]}")
+        sys.stdout.write(f"{timestamp},{status},{requests_per_minute[k]}\n")
 
 
 if __name__ == "__main__":
