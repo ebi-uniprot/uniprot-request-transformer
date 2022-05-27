@@ -2,8 +2,6 @@
 import sys
 from collections import defaultdict
 
-from requests_toolbelt import user_agent
-
 
 def floor_minute(timestamp):
     return 60 * int(int(timestamp) / 60)
