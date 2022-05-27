@@ -2,6 +2,8 @@
 import sys
 from collections import defaultdict
 
+from requests_toolbelt import user_agent
+
 
 def floor_minute(timestamp):
     return 60 * int(int(timestamp) / 60)
@@ -14,12 +16,12 @@ def get_status_key(status):
 def main():
     requests_per_minute = defaultdict(int)
     for line in sys.stdin:
-        timestamp, status = line.strip().split("|")
+        timestamp, status, useragent = line.strip().split("|")
         floored = floor_minute(timestamp)
-        requests_per_minute[(floored, get_status_key(status))] += 1
+        requests_per_minute[(floored, get_status_key(status), useragent)] += 1
     for k in sorted(requests_per_minute.keys()):
         (timestamp, status) = k
-        sys.stdout.write(f"{timestamp},{status},{requests_per_minute[k]}\n")
+        sys.stdout.write(f"{timestamp},{status},{requests_per_minute[k]},{useragent}\n")
 
 
 if __name__ == "__main__":

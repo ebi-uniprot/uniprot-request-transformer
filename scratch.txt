@@ -11,6 +11,23 @@ sqlite3 uniprot-20220101-20220513.sqlite3 \
 > get-200-transformed-prepared-for-gatling.txt
 
 sqlite3 uniprot-20220101-20220513.sqlite3 \
+"SELECT DateTime, Status FROM Request LIMIT 100000;" \
+| ./uniprot-request-transformer/count_requests.py \
+> requests_per_minute_with_status.txt
+
+sqlite3 uniprot-20220101-20220513.sqlite3 \
 "SELECT DateTime, Status FROM Request;" \
 | ./uniprot-request-transformer/count_requests.py \
 > requests_per_minute_with_status.txt
+
+
+sqlite3 uniprot-20220101-20220513.sqlite3 \
+"SELECT DATETIME(DateTime, 'unixepoch'), * FROM Request WHERE DATETIME(DateTime, 'unixepoch') > '2022-04-26 15:10:00' AND DATETIME(DateTime, 'unixepoch') < '2022-04-26 15:20:00'" \
+> 2022-04-26-busy-period.txt
+
+
+sqlite3 uniprot-20220101-20220513.sqlite3 \
+"SELECT DATETIME(DateTime, 'unixepoch'), * FROM Request WHERE DATETIME(DateTime, 'unixepoch') < '2022-02-08 00:09:18' LIMIT 10" \
+
+
+2022-02-08 00:09:18
