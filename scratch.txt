@@ -11,6 +11,6 @@ sqlite3 uniprot-20220101-20220513.sqlite3 \
 > get-200-transformed-prepared-for-gatling.txt
 
 sqlite3 uniprot-20220101-20220513.sqlite3 \
-"SELECT DateTime FROM Request WHERE Status = 200;" \
+"SELECT DateTime, Status FROM Request;" \
 | ./uniprot-request-transformer/count_requests.py \
-> 200-requests_per_minute.txt
+> requests_per_minute.txt
