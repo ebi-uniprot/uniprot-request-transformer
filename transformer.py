@@ -4,6 +4,7 @@ import sys
 import os
 import re
 from urllib.parse import urlencode, urlparse, parse_qs, unquote
+import pandas as pd
 
 prev_to_new_return_field = {
     "id": "accession",
@@ -259,13 +260,73 @@ def transform_request(resource):
         parsed_url = parsed_url._replace(path=re.sub(p, "", parsed_url.path))
         parsed_qs["format"] = m.group("format")
     parsed_url = parsed_url._replace(query=urlencode(parsed_qs, True))
-    return unquote(parsed_url.geturl()) + "\n"
+    return unquote(parsed_url.geturl())
+
+
+def prepare_for_gatling(resource):
+    ext_to_media_type = {
+        "fasta": "text/plain; format=fasta",
+        "tsv": "text/plain; format=tsv",
+        "xlsx": "application/vnd.ms-excel",
+        "xml": "application/xml",
+        "rdf": "application/rdf+xml",
+        "txt": "text/plain; format=flatfile",
+        "gff": "text/plain; format=gff",
+        "list": "text/plain; format=list",
+        "json": "application/json",
+        "obo": "text/plain; format=obo",
+    }
+
+    re_ext = re.compile(
+        r"\.(?P<ext>fasta|tsv|xlsx|xml|rdf|txt|gff|list|json|obo)", re.IGNORECASE
+    )
+    parsed_url = urlparse(resource)
+    parsed_qs = parse_qs(parsed_url.query)
+    m = re_ext.search(resource)
+    if (
+        "query" in parsed_qs
+        and "format" in parsed_qs
+        and parsed_qs["format"][0] in ext_to_media_type
+    ):
+        media_type = ext_to_media_type[parsed_qs["format"][0]]
+        resource = f"{resource}#{media_type}"
+    elif m and m.group("ext") in ext_to_media_type:
+        media_type = ext_to_media_type[m.group("ext")]
+        resource = f"{resource}#{media_type}"
+    else:
+        media_type = ext_to_media_type["json"]
+        resource = f"{resource}#{media_type}"
+    return resource
 
 
 def main():
-    for request in sys.stdin:
-        if include_request(request):
-            sys.stdout.write(transform_request(request.strip()))
+    assert len(sys.argv) == 3
+    infile = sys.argv[1]
+    outfile = sys.argv[2]
+    header = [
+        "DateTime",
+        "Method",
+        "Resource",
+        "Status",
+        "SizeBytes",
+        "ResponseTime",
+        "Referer",
+        "UserAgentFamily",
+    ]
+    df = pd.read_csv(
+        infile,
+        names=header,
+        usecols=[header.index(h) for h in ["Resource", "Method", "Status"]],
+    )
+    df = df[
+        (df["Method"] == "GET")
+        & (df["Status"] == 200)
+        & df["Resource"].apply(include_request)
+    ]
+    df["Transformed"] = df["Resource"].apply(
+        lambda r: prepare_for_gatling(transform_request(r))
+    )
+    df.to_csv(outfile, columns=["Transformed"], index=False, header=False)
 
 
 if __name__ == "__main__":
