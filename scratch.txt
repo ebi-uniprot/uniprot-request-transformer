@@ -16,9 +16,17 @@ sqlite3 uniprot-20220101-20220513.sqlite3 \
 > requests_per_minute_with_status.txt
 
 sqlite3 uniprot-20220101-20220513.sqlite3 \
-"SELECT DateTime, Status FROM Request;" \
+"SELECT Id, DateTime, Status, UserAgent FROM Request LIMIT 100000;" \
 | ./uniprot-request-transformer/count_requests.py \
-> requests_per_minute_with_status.txt
+> requests_per_minute_with_status_and_useragent.txt
+
+sqlite3 uniprot-20220101-20220513.sqlite3 \
+"SELECT Id, UserAgent FROM Request LIMIT 10000;" \
+> foo.txt
+
+
+| ./uniprot-request-transformer/count_requests.py \
+> requests_per_minute_with_status_and_useragent.txt
 
 
 sqlite3 uniprot-20220101-20220513.sqlite3 \
