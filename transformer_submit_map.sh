@@ -25,4 +25,4 @@ bsub \
 -R"select[mem>$mem] rusage[mem=$mem] span[hosts=1]" \
 -o $OUT_DIRECTORY/%J-%I \
 -e $ERROR_DIRECTORY/%J-%I \
-./map_wrapper.sh $FILE_LIST $MAP_DIRECTORY
+./transformer_map_wrapper.sh $FILE_LIST $MAP_DIRECTORY
