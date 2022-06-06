@@ -14,7 +14,7 @@ mkdir -p $ERROR_DIRECTORY
 PARSED_DIRECTORY=$LOG_PARSING_DIRECTORY/reduce/parsed
 FILE_LIST=$TRANSFORMED_DIRECTORY/file_list.txt
 
-find $LOG_DIRECTORY -name "*.csv" > $FILE_LIST
+find $PARSED_DIRECTORY -name "*.csv" > $FILE_LIST
 n=$(wc -l < $FILE_LIST)
 
 mem=5000
