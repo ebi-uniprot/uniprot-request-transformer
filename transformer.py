@@ -176,6 +176,7 @@ def transform_query(query):
     prev_to_new_query_field = {
         "author": "lit_author",
         "cdantigen": "protein_name",
+        "entry_name": "protein_name",
         "goa": "go",
         "host": "virus_host",
         "id": "accession_id",
@@ -191,7 +192,8 @@ def transform_query(query):
         query = query.replace(f"{prev_field}:", f"{new_field}:")
 
     query = query.replace("ACCESSION:", "accession:")
-    query = query.replace("MNEMONIC:", "mnemonic:")
+    query = query.replace("MNEMONIC:", "id:")
+    query = query.replace("mnemonic:", "id:")
 
     return query
 
@@ -249,6 +251,13 @@ def transform_request(resource):
         parsed_url = parsed_url._replace(
             path=parsed_url.path.replace("/uniprot/", "/uniprotkb/", 1)
         )
+    if parsed_url.path.endswith("/protvista"):
+        parsed_url = parsed_url._replace(path=parsed_url.path.replace("/protvista", ""))
+    p = re.compile(r"&format=(?P<format>.+)")
+    m = p.search(parsed_url.path)
+    if m:
+        parsed_url = parsed_url._replace(path=re.sub(p, "", parsed_url.path))
+        parsed_qs["format"] = m.group("format")
     parsed_url = parsed_url._replace(query=urlencode(parsed_qs, True))
     return unquote(parsed_url.geturl()) + "\n"
 

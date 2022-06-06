@@ -22,3 +22,5 @@
 /uniprot/?query=*&sort=id&desc=no
 /uniprot/?query=database:(type:pfam)&format=tab&limit=10&columns=id,entry%20name,reviewed,protein%20names,genes,organism,length,comment(ALTERNATIVE%20PRODUCTS),fragment
 /uniprot/search?query=*&columns=context
+/uniprot/A0A650BLY9/protvista
+/uniprot/A0A6A6EQJ1&format=xml

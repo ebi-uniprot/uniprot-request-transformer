@@ -4,7 +4,7 @@
 /uniprotkb/P05067.tsv
 /uniref/search?format=tsv&offset=0&query=*&size=25
 /uniref/stream?query=taxonomy_id:55087&format=list&force=true&compressed=true
-/uniprotkb/stream?query=accession:Q92133+OR+mnemonic:Q92133&format=xml
+/uniprotkb/stream?query=accession:Q92133+OR+id:Q92133&format=xml
 /uniprotkb/search?query=date_created:2022-05-01+TO+2022-05-25
 /uniprotkb/search?query=lit_author:rice
 /uniprotkb/search?query=cc_webresource:protein
@@ -17,3 +17,5 @@
 /uniprotkb/search?query=*&sort=accession+asc&desc=no
 /uniprotkb/search?query=database:pfam&format=tsv&size=10&fields=accession,id,reviewed,protein_name,gene_names,organism_name,length,cc_alternative_products,fragment
 /uniprotkb/search/search?query=*
+/uniprotkb/A0A650BLY9
+/uniprotkb/A0A6A6EQJ1?format=xml
