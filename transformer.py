@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-
 import sys
 import os
 import re
 from urllib.parse import urlencode, urlparse, parse_qs, unquote
 import pandas as pd
+import numpy as np
 
 prev_to_new_return_field = {
     "id": "accession",
@@ -326,7 +326,7 @@ def main():
     df["Transformed"] = df["Resource"].apply(
         lambda r: prepare_for_gatling(transform_request(r))
     )
-    df.to_csv(outfile, columns=["Transformed"], index=False, header=False)
+    np.savetxt(outfile, df["Transformed"], fmt='%s')
 
 
 if __name__ == "__main__":
