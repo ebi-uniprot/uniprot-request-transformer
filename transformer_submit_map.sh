@@ -17,7 +17,7 @@ FILE_LIST=$TRANSFORMED_DIRECTORY/file_list.txt
 find $PARSED_DIRECTORY -name "*.csv" > $FILE_LIST
 n=$(wc -l < $FILE_LIST)
 
-mem=5000
+mem=10000
 
 bsub \
 -J"transform[1-$n]" \
