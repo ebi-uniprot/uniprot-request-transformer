@@ -232,11 +232,15 @@ def transform_request(resource):
         )
         parsed_url = parsed_url._replace(path=os.path.join(parsed_url.path, endpoint))
         parsed_qs["query"] = transform_query(parsed_qs["query"][0])
-    if "format" in parsed_qs and parsed_qs["format"][0] == "tab":
+    if "format" in parsed_qs and parsed_qs["format"][0].lower() == "tab":
         parsed_qs["format"] = "tsv"
-    if parsed_url.path.endswith(".tab"):
+    if parsed_url.path.lower().endswith(".tab"):
         parsed_url = parsed_url._replace(path=parsed_url.path.replace(".tab", ".tsv"))
-    if parsed_url.path.startswith("/uniref/") and parsed_qs["format"][0] == "xml":
+    if (
+        parsed_url.path.startswith("/uniref/")
+        and "format" in parsed_qs
+        and parsed_qs["format"][0].lower() == "xml"
+    ):
         del parsed_qs["format"]
     if "compress" in parsed_qs:
         parsed_qs["compressed"] = (
@@ -264,6 +268,15 @@ def transform_request(resource):
         parsed_qs["format"] = m.group("format")
     parsed_url = parsed_url._replace(query=urlencode(parsed_qs, True))
     return unquote(parsed_url.geturl())
+
+
+def get_namespace(resource):
+    p = re.compile(r"^/(?P<namespace>.*?)/")
+    m = p.match(resource)
+    if m:
+        return m.group("namespace")
+    else:
+        return "root"
 
 
 def prepare_for_gatling(resource):
@@ -329,6 +342,10 @@ def main():
     df["Transformed"] = df["Resource"].apply(
         lambda r: prepare_for_gatling(transform_request(r))
     )
+    df["Namespace"] = df["Transformed"].apply(get_namespace)
+    for namespace, group in df.groupby("Namespace"):
+        np.savetxt(f"{outfile}.{namespace}", group["Transformed"], fmt="%s")
+
     np.savetxt(outfile, df["Transformed"], fmt="%s")
 
 
