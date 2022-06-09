@@ -182,6 +182,7 @@ def transform_query(query):
         "host": "virus_host",
         "id": "accession_id",
         "inn": "protein_name",
+        "member": "uniprot_id",
         "method": "cc_mass_spectrometry",
         "modified": "date_modified",
         "name": "protein_name",
@@ -235,6 +236,8 @@ def transform_request(resource):
         parsed_qs["format"] = "tsv"
     if parsed_url.path.endswith(".tab"):
         parsed_url = parsed_url._replace(path=parsed_url.path.replace(".tab", ".tsv"))
+    if parsed_url.path.startswith("/uniref/") and parsed_qs["format"][0] == "xml":
+        del parsed_qs["format"]
     if "compress" in parsed_qs:
         parsed_qs["compressed"] = (
             "true" if parsed_qs["compress"][0] == "yes" else "false"
@@ -326,7 +329,7 @@ def main():
     df["Transformed"] = df["Resource"].apply(
         lambda r: prepare_for_gatling(transform_request(r))
     )
-    np.savetxt(outfile, df["Transformed"], fmt='%s')
+    np.savetxt(outfile, df["Transformed"], fmt="%s")
 
 
 if __name__ == "__main__":
