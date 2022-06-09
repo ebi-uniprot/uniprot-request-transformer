@@ -19,3 +19,5 @@
 /uniprotkb/search/search?query=*
 /uniprotkb/A0A650BLY9
 /uniprotkb/A0A6A6EQJ1?format=xml
+/uniref/stream?query=uniprot_id:V6KUI7+AND+identity:0.5
+/uniref/search?query=uniprot_id:V6KUI7+AND+identity:0.5&format=fasta&size=10

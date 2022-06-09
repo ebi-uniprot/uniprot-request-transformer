@@ -24,3 +24,5 @@
 /uniprot/search?query=*&columns=context
 /uniprot/A0A650BLY9/protvista
 /uniprot/A0A6A6EQJ1&format=xml
+/uniref/?query=member:V6KUI7+AND+identity:0.5&format=xml
+/uniref/?query=member:V6KUI7+AND+identity:0.5&format=fasta&limit=10
