@@ -1,29 +1,74 @@
 #!/usr/bin/env python3
 import sys
-from collections import defaultdict
-from user_agents import parse
+import pandas as pd
 
 
 def floor_minute(timestamp):
-    return 60 * int(int(timestamp) / 60)
+    return 60 * int(timestamp / 60)
 
 
-def get_status_key(status):
-    return f"{status[0]}xx"
+# def get_status_key(status):
+#     return f"{status[0]}xx"
 
 
 def main():
-    requests_per_minute = defaultdict(int)
-    for line in sys.stdin:
-        timestamp, status, useragent = line.strip().split("|")
-        parsed = parse(useragent)
-        useragent_family = parsed.browser.family
-        floored = floor_minute(timestamp)
-        requests_per_minute[(floored, get_status_key(status), useragent_family)] += 1
-    for k in sorted(requests_per_minute.keys()):
-        (timestamp, status, useragent_family) = k
-        sys.stdout.write(
-            f"{timestamp},{status},{requests_per_minute[k]},{useragent_family}\n"
+    header = [
+        "DateTime",
+        "Method",
+        "Resource",
+        "Namespace",
+        "Status",
+        "SizeBytes",
+        "ResponseTime",
+        "Referer",
+        "UserAgentFamily",
+        "IP",
+    ]
+    infile = sys.argv[1]
+    df = pd.read_csv(
+        infile,
+        names=header,
+        nrows=1e5,
+        usecols=[header.index(h) for h in ["Namespace", "DateTime"]],
+    )
+    namespaces = {
+        "uniprot",
+        "jobs",
+        "proteomes",
+        "uniref",
+        "blast",
+        "root",
+        "uploadlists",
+        "mapping",
+        "citations",
+        "taxonomy",
+        "align",
+        "entry",
+        "basket",
+        "filterhints",
+        "uniparc",
+        "help",
+        "peptidesearch",
+        "hints",
+        "saas",
+        "diseases",
+        "keywords",
+        "unirule",
+        "database",
+        "news",
+        "arba",
+        "view",
+        "locations",
+        "journals",
+        "docs",
+        "manual",
+        "downloads",
+    }
+    df["DateTime"] = df["DateTime"].apply(floor_minute)
+    df = df[df.Namespace.isin(namespaces)]
+    for namespace, namespace_group in df.groupby("Namespace"):
+        namespace_group.groupby("DateTime").size().to_csv(
+            f"{infile}.{namespace}.rpm", header=False
         )
 
 
