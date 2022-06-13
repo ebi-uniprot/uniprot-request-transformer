@@ -4,7 +4,10 @@ import pandas as pd
 
 
 def floor_minute(timestamp):
-    return 60 * int(timestamp / 60)
+    try:
+        return 60 * int(int(timestamp) / 60)
+    except:
+        return pd.NA
 
 
 # def get_status_key(status):
