@@ -28,7 +28,6 @@ def main():
     df = pd.read_csv(
         infile,
         names=header,
-        nrows=1e5,
         usecols=[header.index(h) for h in ["Namespace", "DateTime"]],
     )
     namespaces = {
