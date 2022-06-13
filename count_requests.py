@@ -64,8 +64,8 @@ def main():
         "manual",
         "downloads",
     }
-    df["DateTime"] = df["DateTime"].apply(floor_minute)
     df = df[df.Namespace.isin(namespaces)]
+    df["DateTime"] = df["DateTime"].apply(floor_minute)
     for namespace, namespace_group in df.groupby("Namespace"):
         namespace_group.groupby("DateTime").size().to_csv(
             f"{infile}.{namespace}.rpm", header=False
