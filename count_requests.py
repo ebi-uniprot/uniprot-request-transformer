@@ -32,7 +32,7 @@ def main():
         infile,
         names=header,
         usecols=[header.index(h) for h in ["Namespace", "DateTime"]],
-    )
+    ).dropna(how="all")
     namespaces = {
         "uniprot",
         "jobs",
